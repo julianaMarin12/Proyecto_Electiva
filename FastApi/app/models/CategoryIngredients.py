@@ -1,6 +1,6 @@
 from pydantic import BaseModel
 
 class CategoryIngredients(BaseModel):
-    idCategoryIngredients: str
+    idCategoryIngredients: int
     nameCategoryIngredients: str
     

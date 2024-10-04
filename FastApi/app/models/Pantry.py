@@ -2,6 +2,6 @@ from pydantic import BaseModel
 import Ingredients
 
 class Pantry(BaseModel):
-    idPantry: str
+    idPantry: int
     Ingredients: Ingredients    #Es una lista
     

@@ -1,10 +1,10 @@
-from pydantic import BaseModel
+from pydantic import BaseModel, date, time
 import Recipe
 
 class Menu(BaseModel):
-    idMenu: str
-    day: str    #Es una fecha
-    startTime: str  #Es una hora
-    endTime: str    #Es una hora
+    idMenu: int
+    day: date    
+    startTime: time
+    endTime: time
     category: str
     Recipe: Recipe  #Es una lista

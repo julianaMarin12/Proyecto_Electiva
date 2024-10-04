@@ -1,9 +1,9 @@
-from pydantic import BaseModel
+from pydantic import BaseModel, date
 import Ingredients
 
 class BuyList(BaseModel):
-    idBuys: str
+    idBuys: int
     category: str 
-    purchaseDate: str   #Es una fecha
+    purchaseDate: date
     Ingredients: Ingredients    #Es una lista
 

@@ -1,5 +1,5 @@
 from pydantic import BaseModel
 
 class CategoryRecipe(BaseModel):
-    idCategoryRecipe: str
+    idCategoryRecipe: int
     nameCategoryRecipe: str

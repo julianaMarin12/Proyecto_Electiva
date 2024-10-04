@@ -3,6 +3,6 @@ import Recipe
 import Ingredients
 
 class SuggestionRecipe(BaseModel):
-    idSuggestionRecipe: str
+    idSuggestionRecipe: int
     Recipe: Recipe
     Ingredients: Ingredients

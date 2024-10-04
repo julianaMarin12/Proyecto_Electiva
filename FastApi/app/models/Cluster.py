@@ -1,6 +1,6 @@
 from pydantic import BaseModel
 
 class Clusters(BaseModel):
-    idClusters: str
+    idClusters: int
     nameClusters: str
     amount: int

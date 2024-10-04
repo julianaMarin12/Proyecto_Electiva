@@ -1,7 +1,7 @@
-from pydantic import BaseModel
+from pydantic import BaseModel, date
 
 class Notification(BaseModel):
-    idNotification: str
+    idNotification: int
     notificationType: str
     message: str
-    shippingDate: str   #Es una fecha
+    shippingDate: date   #Es una fecha
