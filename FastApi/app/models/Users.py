@@ -8,4 +8,3 @@ class User(BaseModel):
     password: str
     Cluster: Cluster    #Es una lista
     photoProfile: str
-
