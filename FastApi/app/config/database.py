@@ -2,6 +2,8 @@ from dotenv import load_dotenv
 from peewee import *
 from models.Cluster import Clusters
 from models.Ingredients import Ingredients
+from models.CategoryIngredients import CategoryIngredients
+from models.Recipe import Recipe
 import os
 
 load_dotenv()
@@ -46,7 +48,7 @@ class IngredientsModel(Model):
     idIngredients = AutoField(primary_key = True)
     nameIngredients = CharField(max_length=50)
     amount = CharField(max_length=50)
-    # Falta la relacion con la tabla CategoryIngredients
+    idCategoryIngredients = ForeignKeyField(CategoryIngredients, backref='Ingredients')
 
     class Meta:
         database = database
@@ -74,8 +76,8 @@ class ClustersModel(Model):
 
 class SuggestionRecipeModel(Model):
     idSuggestionRecipe = AutoField(primary_key = True)
-    # Falta la relacion con la tabla Recipe
-    # Falta la relacion con la tabla Ingredients
+    idRecipe = ForeignKeyField(Recipe, backref='suggestionRecipe')
+    idIngredients = ForeignKeyField(Ingredients, backref='suggestionRecipe')
 
     class Meta:
         database = database
@@ -84,11 +86,11 @@ class SuggestionRecipeModel(Model):
 
 class PantryModel(Model):
     idPantry = AutoField(primary_key = True)
-    # Falta la relacion con la tabla Ingredients
+    idIngredients = ForeignKeyField(Ingredients, backref='pantry')
 
     class Meta:
         database = database
-        table_name = "suggestionRecipe"
+        table_name = "pantry"
 
 
 class CategoryRecipeModel(Model):
@@ -98,6 +100,41 @@ class CategoryRecipeModel(Model):
     class Meta:
         database = database
         table_name = "categoryRecipe"
+
+class NotificationModel(Model):
+    idNotification = AutoField(primary_key = True)
+    notificationType = CharField(max_length=50)
+    message = CharField(max_length=50)
+    shippingDate = CharField(max_length=50)
+
+    class Meta:
+        database = database
+        table_name = "notification"
+
+        
+class MenuModel(Model):
+    idMenu = AutoField(primary_key = True)
+    day = CharField(max_length=50)
+    starTime = CharField(max_length=50)
+    endTime = CharField(max_length=50)
+    category = CharField(max_length=50)
+    idRecipe = ForeignKeyField(Recipe, backref='menu')
+
+
+    class Meta:
+        database = database
+        table_name = "menu"
+
+
+class BuyListModel(Model):
+    idBuys = AutoField(primary_key = True)
+    category = CharField(max_length=50)
+    purchaseDate = CharField(max_length=50)
+    idIngredients = ForeignKeyField(Ingredients, backref='buysList')
+
+    class Meta:
+        database = database
+        table_name = "buysList"
 
 
 

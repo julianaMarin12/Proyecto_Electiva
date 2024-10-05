@@ -7,4 +7,3 @@ class Menu(BaseModel):
     startTime: time
     endTime: time
     category: str
-    Recipe: Recipe  #Es una lista
