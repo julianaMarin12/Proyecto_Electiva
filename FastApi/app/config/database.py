@@ -17,7 +17,7 @@ database = MySQLDatabase(
 
 class UserModel(Model):
     idUsers = AutoField(primary_key = True)
-    nameUsers = CharField(max_length=50)
+    username = CharField(max_length=50)
     email = CharField(max_length=50)
     password = CharField(max_length=50)
     idClusters = ForeignKeyField(Clusters, backref='users')
