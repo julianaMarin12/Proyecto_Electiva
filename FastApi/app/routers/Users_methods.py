@@ -1,6 +1,6 @@
 from fastapi import APIRouter, Body, HTTPException
 from peewee import DoesNotExist
-from models.Users import User
+from FastApi.app.models.User import User
 from services.Users_logic import (
     create_user_service,
     get_all_users_service,
