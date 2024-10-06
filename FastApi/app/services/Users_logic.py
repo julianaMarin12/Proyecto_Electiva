@@ -1,4 +1,4 @@
-from models.Users import User
+from FastApi.app.models.User import User
 
 def create_user_service(user):
     user_record = User.create(
