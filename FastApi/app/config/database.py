@@ -30,7 +30,7 @@ class UserModel(Model):
         database = database
         table_name = "users"
 
-class CategoryIngredientsModel(Model):
+"""class CategoryIngredientsModel(Model):
     idCategoryIngredients = AutoField(primary_key = True)
     nameCategoryIngredients = CharField(max_length=50)
 
@@ -124,7 +124,7 @@ class BuyListModel(Model):
         database = database
         table_name = "buysList"
 
-
+"""
 
 '''
 

@@ -1,12 +1,15 @@
-from contextlib import asynccontextmanager
+
 
 from fastapi import FastAPI,Depends
+from starlette.responses import RedirectResponse
+
+from contextlib import asynccontextmanager
+from config.database import database as connection
+
 from helpers.auth import get_api_key
 from routers.user import user_route
-from starlette.responses import RedirectResponse
-from contextlib import asynccontextmanager
-from config.database import UserModel
-from config.database import database as connection
+
+
 
 
 @asynccontextmanager
