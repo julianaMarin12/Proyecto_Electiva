@@ -9,7 +9,7 @@ ENV MYSQL_ROOT_PASSWORD root
 ENV MYSQL_DATABASE proyecto_final
 
 # MYSQL_USER: Defines a custom MySQL user to be created in the container
-ENV MYSQL_USER eam-user
+ENV MYSQL_USER root
 
 # MYSQL_PASSWORD: Defines the password for the custom user created with MYSQL_USER
 ENV MYSQL_PASSWORD root

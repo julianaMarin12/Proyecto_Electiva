@@ -1,13 +1,12 @@
-from dotenv import load_dotenv
 from peewee import  Model, MySQLDatabase, AutoField, CharField, IntegerField,ForeignKeyField
-import os
+from config.settings import DATABASE
 
-load_dotenv()
 database = MySQLDatabase(
-    os.getenv("MYSQL_DATABASE"),  # The name of the MySQL database
-    user=os.getenv("MYSQL_USER"),  # MySQL username
-    passwd=os.getenv("MYSQL_PASSWORD"),  # MySQL password
-    host=os.getenv("MYSQL_HOST")  # MySQL host (can be localhost or a remote server)
+    DATABASE["name"],
+    user=DATABASE["user"],
+    passwd=DATABASE["password"],
+    host=DATABASE["host"],
+    port=DATABASE["port"],
 )
 
 class ClustersModel(Model):
@@ -101,8 +100,7 @@ class NotificationModel(Model):
     class Meta:
         database = database
         table_name = "notification"
-
-        
+       
 class MenuModel(Model):
     idMenu = AutoField(primary_key = True)
     day = CharField(max_length=50)
@@ -115,7 +113,6 @@ class MenuModel(Model):
     class Meta:
         database = database
         table_name = "menu"
-
 
 class BuyListModel(Model):
     idBuys = AutoField(primary_key = True)
