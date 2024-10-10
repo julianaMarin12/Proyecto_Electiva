@@ -1,141 +1,116 @@
-from fastapi import APIRouter, Body, HTTPException
-from peewee import DoesNotExist
+"""
+This module defines the routes for user-related operations in the FastAPI application.
+Routes:
+    - POST /users/: Create a new user.
+    - GET /users: Retrieve a list of all users.
+    - GET /{idUser}: Retrieve a specific user by their ID.
+    - PUT /{idUser}: Update a specific user by their ID.
+    - DELETE /{idUser}: Delete a specific user by their ID.
+Functions:
+    - create_users(user: User): Creates a new user with the provided details.
+    - get_users(): Retrieves a list of all users from the database.
+    - get_user(idUser: int): Retrieves a specific user by their ID. 
+      Returns an error message if the user is not found.
+    - update_useridUser: int, user: User): Updates a specific user by their ID.
+    - delete_user(idUser int): Deletes a specific user by their ID.
+Dependencies:
+    - UserModel: The database model for users.
+    - User: The Pydantic model for user data validation.
+    - APIRouter: FastAPI router for defining routes.
+    - Body: FastAPI dependency for parsing request bodies.
+"""
+
+from fastapi import APIRouter, Body
+
+from config.database import UserModel
 from models.User import User
-from services.Users_logic import (
-    create_user_service,
-    get_all_users_service,
-    get_user_service,
-    update_user_service,
-    delete_user_service
-)
 
 user_route = APIRouter()
 
-@user_route.post("/")
+@user_route.post("/users/")
 def create_users(user: User = Body(...)):
-    return create_user_service(user)
-    
-@user_route.get("/{idUser}")
-def read_user(idUser: int):
-    try:
-        return get_user_service(idUser)
-    except DoesNotExist as exc:
-        raise HTTPException(status_code=404, detail="User not found") from exc
-
-@user_route.get("/")
-def read_users():
-    return get_all_users_service()
-
-@user_route.put("/{idUser}")
-def update_user(idUser: int, user_data: User = Body(...)):
-    try:
-        return update_user_service(idUser, user_data)
-    except DoesNotExist as exc:
-        raise HTTPException(status_code=404, detail="User not found") from exc
-    
-@user_route.delete("/{idUser}")
-def delete_user(idUser: int):
-    try:
-        return delete_user_service(idUser)
-    except DoesNotExist as exc:
-        raise HTTPException(status_code=404, detail="User not found") from exc
-
-'''
-"""
-This module contains the routes for managing user data.
-"""
-
-from fastapi import APIRouter, Body, HTTPException
-from peewee import DoesNotExist
-from app.models.user_model import User
-from app.services.user_service import (
-    create_user_service,
-    get_all_users_service,
-    get_user_service,
-    update_user_service,
-    delete_user_service
-)
-
-user_router = APIRouter()
-
-@user_router.post("/")
-def create_user(user: User = Body(...)):
     """
-    Creates a new user in the database.
+    Create a new user.
 
-    Parameters:
-        user (User): An object containing the user details.
-        
+    Args:
+        user (User): The user object containing the name, email,
+        password and photo profile.
+
     Returns:
-        The created user object.
+        None
     """
-    return create_user_service(user)
+    UserModel.create(
+        name=user.name,
+        email=user.email,
+        password=user.password,
+        photoProfile=user.photoProfile,
+    )
+    return {"message": "User created successfully"}
 
-@user_router.get("/{user_id}")
-def read_user(user_id: int):
+    
+@user_route.get("/users")
+def get_users():
     """
-    Retrieves a user by their ID.
+    Retrieve a list of users from the database.
+
+    This function queries the UserModel to select all users with an ID greater than 0,
+    converts the result to a dictionary format, and returns it as a list.
+
+    Returns:
+        list: A list of dictionaries, each representing a user.
+    """
+    user = UserModel.select().where(UserModel.idUser > 0).dicts()
+    return list(user)
+
+@user_route.get("/{idUser}")
+def get_user(id_user: int):
+    """
+    Retrieve a user by their ID.
 
     Args:
         user_id (int): The ID of the user to retrieve.
 
     Returns:
-        User: The user object.
-
-    Raises:
-        HTTPException: If the user is not found.
+        UserModel: The user object if found.
+        dict: An error message if the user is not found.
     """
     try:
-        return get_user_service(user_id)
-    except DoesNotExist as exc:
-        raise HTTPException(status_code=404, detail="User not found") from exc
+        user = UserModel.get(UserModel.idUser == id_user)
+        return user
+    except UserModel.DoesNotExist:
+        return {"error": "User not found"}
     
-@user_router.get("/")
-def read_users():
+@user_route.put("/{idUser}")
+def update_user(idUser: int, user: User = Body(...)):
     """
-    Reads and returns all users.
-
-    Returns:
-        List[User]: A list of all users.
-    """
-    return get_all_users_service()
-
-@user_router.put("/{user_id}")
-def update_user(user_id: int, user_data: User = Body(...)):
-    """
-    Update a user with the given user_id and user_data.
-
-    Parameters:
-        user_id (int): The ID of the user to update.
-        user_data (User): The updated user data.
-
-    Returns:
-        The updated user object.
-
-    Raises:
-        HTTPException: If the user with the given ID does not exist.
-    """
-    try:
-        return update_user_service(user_id, user_data)
-    except DoesNotExist as exc:
-        raise HTTPException(status_code=404, detail="User not found") from exc
-    
-@user_router.delete("/{user_id}")
-def delete_user(user_id: int):
-    """
-    Delete a user with the given user_id.
+    Update a user by their ID.
 
     Args:
-        user_id (int): The ID of the user to be deleted.
+        user_id (int): The ID of the user to update.
+        user (User): The user object containing the updated details.
 
     Returns:
         None
-
-    Raises:
-        HTTPException: If the user does not exist.
     """
-    try:
-        return delete_user_service(user_id)
-    except DoesNotExist as exc:
-        raise HTTPException(status_code=404, detail="User not found") from exc
-    '''
+    UserModel.update(
+        name=user.name,
+        password=user.password,
+        photoProfile=user.photoProfile,
+    ).where(UserModel.idUser == idUser).execute()
+    return {"message": "User updated successfully"}
+
+@user_route.delete("/{idUser}")
+def delete_user(id_user: int):
+    """
+    Delete a user by their ID.
+
+    Args:
+        idUser (int): The ID of the user to delete.
+
+    Returns:
+        None
+    """
+    UserModel.delete().where(UserModel.idUser == id_user).execute()
+    return {"message": "User deleted successfully"}
+
+
