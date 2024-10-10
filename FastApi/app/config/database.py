@@ -20,17 +20,16 @@ class ClustersModel(Model):
 
 class UserModel(Model):
     idUser = AutoField(primary_key = True)
-    name = CharField(max_length=50)
+    name = CharField(max_length=50, unique=True)
     email = CharField(max_length=50)
     password = CharField(max_length=50)
     photoProfile = CharField(max_length=50)
-    idClusters = ForeignKeyField(ClustersModel, backref='users')
 
     class Meta:
         database = database
         table_name = "users"
 
-"""class CategoryIngredientsModel(Model):
+class CategoryIngredientsModel(Model):
     idCategoryIngredients = AutoField(primary_key = True)
     nameCategoryIngredients = CharField(max_length=50)
 
@@ -123,25 +122,3 @@ class BuyListModel(Model):
     class Meta:
         database = database
         table_name = "buysList"
-
-"""
-
-'''
-
-class ShoppingList_Ingredient(Model):
-    """
-    Represents a table bridge between the shopping list and the ingredient in the database.
-    
-    Attributes:
-        shoppingListId (int): The unique identifier of the shopping list.
-        ingredientId (int): The unique identifier of the ingredient.
-    """
-    shoppingListId = ForeignKeyField(ShoppingList, backref='shopping_list_ingredients')
-    ingredientId = ForeignKeyField(Ingredient, backref='shopping_list_ingredients')
-
-    class Meta:
-        """Defines the metadata for the ShoppingList_Ingredient model."""
-        database = database
-        db_table = "shopping_list_ingredients"
-
-'''
