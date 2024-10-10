@@ -8,6 +8,7 @@ from config.database import database as connection
 
 from helpers.auth import get_api_key
 from routers.user import user_route
+from config.database import UserModel
 
 
 
@@ -17,6 +18,7 @@ async def lifespan(app: FastAPI):
     # Conectar a la base de datos si la conexión está cerrada
     if connection.is_closed():
         connection.connect()
+        connection.create_tables([UserModel])
     try:
         yield  # Aquí es donde se ejecutará la aplicación
     finally:
