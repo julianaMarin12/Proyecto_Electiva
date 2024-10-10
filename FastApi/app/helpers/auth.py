@@ -1,10 +1,8 @@
 """
 This module initializes the FastAPI application and sets up the database connection
 """
-
 # pylint: disable=import-error
 import os
-
 from fastapi import HTTPException, Security, status
 from fastapi.security.api_key import APIKeyHeader
 from dotenv import load_dotenv
@@ -35,6 +33,7 @@ async def get_api_key(api_key: str = Security(api_key_header)):
             "message": "Unauthorized",
         },
     )
+
 """
 from fastapi import Depends, HTTPException
 from fastapi.security import OAuth2PasswordBearer
