@@ -1,9 +1,9 @@
-from FastApi.app.models.User import User
+from  models.User import User
 
 def create_user_service(user):
     user_record = User.create(
         idUser=user.idUser,
-        name=user. name,
+        name=user.name,
         password=user.password,
         email=user.email,
         photo=user.photo

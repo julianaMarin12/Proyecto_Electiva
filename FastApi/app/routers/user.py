@@ -1,6 +1,6 @@
 from fastapi import APIRouter, Body, HTTPException
 from peewee import DoesNotExist
-from FastApi.app.models.User import User
+from models.User import User
 from services.Users_logic import (
     create_user_service,
     get_all_users_service,
@@ -15,10 +15,10 @@ user_route = APIRouter()
 def create_users(user: User = Body(...)):
     return create_user_service(user)
     
-@user_route.get("/{idUsers}")
-def read_user(idUsers: int):
+@user_route.get("/{idUser}")
+def read_user(idUser: int):
     try:
-        return get_user_service(idUsers)
+        return get_user_service(idUser)
     except DoesNotExist as exc:
         raise HTTPException(status_code=404, detail="User not found") from exc
 
@@ -26,17 +26,17 @@ def read_user(idUsers: int):
 def read_users():
     return get_all_users_service()
 
-@user_route.put("/{idUsers}")
-def update_user(idUsers: int, user_data: User = Body(...)):
+@user_route.put("/{idUser}")
+def update_user(idUser: int, user_data: User = Body(...)):
     try:
-        return update_user_service(idUsers, user_data)
+        return update_user_service(idUser, user_data)
     except DoesNotExist as exc:
         raise HTTPException(status_code=404, detail="User not found") from exc
     
-@user_route.delete("/{idUsers}")
-def delete_user(idUsers: int):
+@user_route.delete("/{idUser}")
+def delete_user(idUser: int):
     try:
-        return delete_user_service(user_id)
+        return delete_user_service(idUser)
     except DoesNotExist as exc:
         raise HTTPException(status_code=404, detail="User not found") from exc
 

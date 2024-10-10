@@ -1,68 +1,14 @@
 from dotenv import load_dotenv
-from peewee import *
-from models.Cluster import Clusters
-from models.Ingredients import Ingredients
-from models.CategoryIngredients import CategoryIngredients
-from models.Recipe import Recipe
+from peewee import  Model, MySQLDatabase, AutoField, CharField, IntegerField,ForeignKeyField
 import os
 
 load_dotenv()
-
 database = MySQLDatabase(
-    os.getenv('DB_NAME'),
-    user=os.getenv('DB_USER'),
-    password=os.getenv('DB_PASSWORD'),
-    host=os.getenv('DB_HOST')
+    os.getenv("MYSQL_DATABASE"),  # The name of the MySQL database
+    user=os.getenv("MYSQL_USER"),  # MySQL username
+    passwd=os.getenv("MYSQL_PASSWORD"),  # MySQL password
+    host=os.getenv("MYSQL_HOST")  # MySQL host (can be localhost or a remote server)
 )
-
-class UserModel(Model):
-    idUsers = AutoField(primary_key = True)
-    username = CharField(max_length=50)
-    email = CharField(max_length=50)
-    password = CharField(max_length=50)
-    idClusters = ForeignKeyField(Clusters, backref='users')
-    photoProfile = CharField(max_length=50)
-
-    class Meta:
-        database = database
-        table_name = "users"
-
-
-class RecipeModel(Model):
-    idRecipe = AutoField(primary_key = True)
-    nameRecipe = CharField(max_length=50)
-    instructions = CharField(max_length=50)
-    timePreparation = CharField(max_length=50)
-    difficulty = CharField(max_length=50)
-    category = CharField(max_length=50)
-    idIngredients = ForeignKeyField(Ingredients, backref='recipe')
-    nutrients = CharField(max_length=50)
-    calories = IntegerField(max_length = 50)
-
-    class Meta:
-        database = database
-        table_name = "recipe"
-
-
-class IngredientsModel(Model):
-    idIngredients = AutoField(primary_key = True)
-    nameIngredients = CharField(max_length=50)
-    amount = CharField(max_length=50)
-    idCategoryIngredients = ForeignKeyField(CategoryIngredients, backref='Ingredients')
-
-    class Meta:
-        database = database
-        table_name = "ingredients"
-
-
-class CategoryIngredientsModel(Model):
-    idCategoryIngredients = AutoField(primary_key = True)
-    nameCategoryIngredients = CharField(max_length=50)
-
-    class Meta:
-        database = database
-        table_name = "categoryIngredients"
-
 
 class ClustersModel(Model):
     idClusters = AutoField(primary_key = True)
@@ -73,11 +19,56 @@ class ClustersModel(Model):
         database = database
         table_name = "clusters"
 
+class UserModel(Model):
+    idUser = AutoField(primary_key = True)
+    name = CharField(max_length=50)
+    email = CharField(max_length=50)
+    password = CharField(max_length=50)
+    photoProfile = CharField(max_length=50)
+    idClusters = ForeignKeyField(ClustersModel, backref='users')
+
+    class Meta:
+        database = database
+        table_name = "users"
+
+class CategoryIngredientsModel(Model):
+    idCategoryIngredients = AutoField(primary_key = True)
+    nameCategoryIngredients = CharField(max_length=50)
+
+    class Meta:
+        database = database
+        table_name = "categoryIngredients"
+
+
+class IngredientsModel(Model):
+    idIngredients = AutoField(primary_key = True)
+    nameIngredients = CharField(max_length=50)
+    amount = CharField(max_length=50)
+    idCategoryIngredients = ForeignKeyField(CategoryIngredientsModel, backref='Ingredients')
+
+    class Meta:
+        database = database
+        table_name = "ingredients"
+
+class RecipeModel(Model):
+    idRecipe = AutoField(primary_key = True)
+    nameRecipe = CharField(max_length=50)
+    instructions = CharField(max_length=50)
+    timePreparation = CharField(max_length=50)
+    difficulty = CharField(max_length=50)
+    category = CharField(max_length=50)
+    idIngredients = ForeignKeyField(IngredientsModel, backref='recipe')
+    nutrients = CharField(max_length=50)
+    calories = IntegerField()
+
+    class Meta:
+        database = database
+        table_name = "recipe"
 
 class SuggestionRecipeModel(Model):
     idSuggestionRecipe = AutoField(primary_key = True)
-    idRecipe = ForeignKeyField(Recipe, backref='suggestionRecipe')
-    idIngredients = ForeignKeyField(Ingredients, backref='suggestionRecipe')
+    idRecipe = ForeignKeyField(RecipeModel, backref='suggestionRecipe')
+    idIngredients = ForeignKeyField(IngredientsModel, backref='suggestionRecipe')
 
     class Meta:
         database = database
@@ -86,7 +77,7 @@ class SuggestionRecipeModel(Model):
 
 class PantryModel(Model):
     idPantry = AutoField(primary_key = True)
-    idIngredients = ForeignKeyField(Ingredients, backref='pantry')
+    idIngredients = ForeignKeyField(IngredientsModel, backref='pantry')
 
     class Meta:
         database = database
@@ -118,7 +109,7 @@ class MenuModel(Model):
     starTime = CharField(max_length=50)
     endTime = CharField(max_length=50)
     category = CharField(max_length=50)
-    idRecipe = ForeignKeyField(Recipe, backref='menu')
+    idRecipe = ForeignKeyField(RecipeModel, backref='menu')
 
 
     class Meta:
@@ -130,7 +121,7 @@ class BuyListModel(Model):
     idBuys = AutoField(primary_key = True)
     category = CharField(max_length=50)
     purchaseDate = CharField(max_length=50)
-    idIngredients = ForeignKeyField(Ingredients, backref='buysList')
+    idIngredients = ForeignKeyField(IngredientsModel, backref='buysList')
 
     class Meta:
         database = database

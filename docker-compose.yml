@@ -3,7 +3,7 @@ services:
     build: 
       context: ./MySQL
       dockerfile: Dockerfile
-    container_name: migrations
+    container_name: database
     restart: always
     ports:
       - 3306:3306

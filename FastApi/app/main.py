@@ -1,7 +1,11 @@
-from fastapi import FastAPI
-from starlette.responses import RedirectResponse
-
 from contextlib import asynccontextmanager
+
+from fastapi import FastAPI,Depends
+from helpers.auth import get_api_key
+from routers.user import user_route
+from starlette.responses import RedirectResponse
+from contextlib import asynccontextmanager
+from config.database import UserModel
 from config.database import database as connection
 
 
@@ -11,7 +15,6 @@ async def lifespan(app: FastAPI):
     if connection.is_closed():
         connection.connect()
     try:
-
         yield  # Aquí es donde se ejecutará la aplicación
     finally:
         # Cerrar la conexión cuando la aplicación se detenga
@@ -22,6 +25,12 @@ async def lifespan(app: FastAPI):
 app = FastAPI(lifespan=lifespan)
 
 
+app.include_router(
+    user_route, 
+    prefix="/api/user", 
+    tags=["users"], 
+    dependencies=[Depends(get_api_key)],
+)# User routes
 @app.get("/")
 def read_root():
     return RedirectResponse(url="/docs")
