@@ -1,3 +1,8 @@
+"""
+This module contains the SQLAlchemy configuration for the FastAPI application.
+It includes the database connection setup, engine configuration, and session creation
+for interacting with the database.
+"""
 from sqlalchemy import Column, Integer, String, create_engine
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
@@ -10,8 +15,8 @@ class User(Base):
     """User model representing the users table."""
     __tablename__ = "users"  # Name of the table in the database
     idUser = Column(Integer, primary_key=True, index=True)  # Primary key with an index
-    name = Column(String(50), unique=True, index=True)  # Unique username with a max length of 50, indexed
-    email = Column(String(100), unique=True, index=True)  # Unique email with a max length of 100, indexed
+    name = Column(String(50), unique=True, index=True)  # Unique username with a max length of 50.
+    email = Column(String(100), unique=True, index=True)  # Unique email with a max length of 100.
     password = Column(String(255))  # User's password with a max length of 255
     photoProfile = Column(String(50))  # Profile photo path or URL with a max length of 50
 
