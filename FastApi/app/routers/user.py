@@ -19,11 +19,10 @@ Dependencies:
     - APIRouter: FastAPI router for defining routes.
     - Body: FastAPI dependency for parsing request bodies.
 """
-
-from fastapi import APIRouter, Body
-
 from config.database import UserModel
 from models.User import User
+
+from fastapi import APIRouter, Body
 
 user_route = APIRouter()
 
@@ -47,7 +46,6 @@ def create_users(user: User = Body(...)):
     )
     return {"message": "User created successfully"}
 
-    
 @user_route.get("/users")
 def get_users():
     """
@@ -79,9 +77,9 @@ def get_user(id_user: int):
         return user
     except UserModel.DoesNotExist:
         return {"error": "User not found"}
-    
+
 @user_route.put("/{idUser}")
-def update_user(idUser: int, user: User = Body(...)):
+def update_user(id_user: int, user: User = Body(...)):
     """
     Update a user by their ID.
 
@@ -96,7 +94,7 @@ def update_user(idUser: int, user: User = Body(...)):
         name=user.name,
         password=user.password,
         photoProfile=user.photoProfile,
-    ).where(UserModel.idUser == idUser).execute()
+    ).where(UserModel.idUser == id_user).execute()
     return {"message": "User updated successfully"}
 
 @user_route.delete("/{idUser}")
@@ -112,5 +110,3 @@ def delete_user(id_user: int):
     """
     UserModel.delete().where(UserModel.idUser == id_user).execute()
     return {"message": "User deleted successfully"}
-
-
