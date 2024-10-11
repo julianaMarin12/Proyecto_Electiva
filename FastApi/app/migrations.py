@@ -25,7 +25,7 @@ class Post(Base):
 
 
 # Configurar la base de datos
-DATABASE_URL = f"mysql+pymysql://{DATABASE["user"]}:{DATABASE["password"]}@{DATABASE["host"]}/{DATABASE["name"]}"
+DATABASE_URL = f"mysql+pymysql://{DATABASE['user']}:{DATABASE['password']}@{DATABASE['host']}/{DATABASE['name']}"
 engine = create_engine(DATABASE_URL)
 
 
