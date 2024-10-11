@@ -8,7 +8,6 @@
      `ForeignKeyField`: A field that creates a foreign key relationship between models.
 """
 from peewee import Model, MySQLDatabase, AutoField, CharField, IntegerField, ForeignKeyField
-
 """
     This imports the `DATABASE` configuration from the settings module.
 """
@@ -62,8 +61,7 @@ class IngredientsModel(Model):
     idIngredients = AutoField(primary_key=True)  # Auto-incrementing primary key
     nameIngredients = CharField(max_length=50)  # Ingredient name, max 50 characters
     amount = CharField(max_length=50)  # Amount of ingredient, max 50 characters
-    idCategoryIngredients = ForeignKeyField(CategoryIngredientsModel, backref='Ingredients')  
-    # Foreign key to the ingredient category
+    idCategoryIngredients = ForeignKeyField(CategoryIngredientsModel, backref='Ingredients')  # Foreign key to the ingredient category
 
     class Meta:
         """Meta options for IngredientsModel."""
@@ -78,8 +76,7 @@ class RecipeModel(Model):
     timePreparation = CharField(max_length=50)  # Time needed to prepare the recipe
     difficulty = CharField(max_length=50)  # Difficulty level of the recipe
     category = CharField(max_length=50)  # Recipe category, max 50 characters
-    idIngredients = ForeignKeyField(IngredientsModel, backref='recipe')  
-    # Foreign key to ingredients used in the recipe
+    idIngredients = ForeignKeyField(IngredientsModel, backref='recipe')  # Foreign key to ingredients used in the recipe
     nutrients = CharField(max_length=50)  # Nutritional information
     calories = IntegerField()  # Number of calories in the recipe
 
@@ -92,8 +89,7 @@ class SuggestionRecipeModel(Model):
     """Model to represent recipe suggestions."""
     idSuggestionRecipe = AutoField(primary_key=True)  # Auto-incrementing primary key
     idRecipe = ForeignKeyField(RecipeModel, backref='suggestionRecipe')  # Foreign key to recipe
-    idIngredients = ForeignKeyField(IngredientsModel, backref='suggestionRecipe')  
-    # Foreign key to ingredients for suggestions
+    idIngredients = ForeignKeyField(IngredientsModel, backref='suggestionRecipe')  # Foreign key to ingredients for suggestions
 
     class Meta:
         """Meta options for SuggestionRecipeModel."""
@@ -151,8 +147,7 @@ class BuyListModel(Model):
     idBuys = AutoField(primary_key=True)  # Auto-incrementing primary key
     category = CharField(max_length=50)  # Category of items in the shopping list
     purchaseDate = CharField(max_length=50)  # Date of purchase
-    idIngredients = ForeignKeyField(IngredientsModel, backref='buysList')  
-    # Foreign key to ingredients in the shopping list
+    idIngredients = ForeignKeyField(IngredientsModel, backref='buysList')  # Foreign key to ingredients in the shopping list
 
     class Meta:
         """Meta options for BuyListModel."""
