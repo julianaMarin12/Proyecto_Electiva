@@ -14,6 +14,7 @@ from peewee import Model, MySQLDatabase, AutoField, CharField, IntegerField, For
 """
 from config.settings import DATABASE
 
+# Create the connection to the MySQL database using the settings in the config file
 database = MySQLDatabase(
     DATABASE["name"],
     user=DATABASE["user"],
@@ -21,203 +22,139 @@ database = MySQLDatabase(
     host=DATABASE["host"],
     port=DATABASE["port"],
 )
-# This creates a connection to the MySQL database using the settings defined in the `DATABASE`.
-# It retrieves the database name, user, password, host, and port from the configuration.
 
 class ClustersModel(Model):
-    idClusters = AutoField(primary_key=True)
-    # Defines an auto-incrementing primary key for the `ClustersModel`.
-
-    nameClusters = CharField(max_length=50)
-    # Defines a character field for the cluster name with a maximum length of 50 characters.
-
-    amount = CharField(max_length=50)
-    # Defines a character field for the amount associated with the cluster.
+    """Model to represent clusters."""
+    idClusters = AutoField(primary_key=True)  # Auto-incrementing primary key
+    nameClusters = CharField(max_length=50)  # Cluster name, limited to 50 characters
+    amount = CharField(max_length=50)  # Amount, limited to 50 characters
 
     class Meta:
-        database = database
-        table_name = "clusters"
-    # Specifies that this model uses the defined database connection to the "clusters" table.
+        """Meta options for ClustersModel."""
+        database = database  # Use the connected database
+        table_name = "clusters"  # Table name in the database
 
 class UserModel(Model):
-    idUser = AutoField(primary_key=True)
-    # Defines an auto-incrementing primary key for the `UserModel`.
-
-    name = CharField(max_length=50, unique=True)
-    # Defines a unique character field for the user's name, limited to 50 characters.
-
-    email = CharField(max_length=50)
-    # Defines a character field for the user's email, limited to 50 characters.
-
-    password = CharField(max_length=50)
-    # Defines a character field for the user's password, limited to 50 characters.
-
-    photoProfile = CharField(max_length=50)
-    # Defines a character field for the user's profile photo URL or path, limited to 50 characters.
+    """Model to represent users."""
+    idUser = AutoField(primary_key=True)  # Auto-incrementing primary key
+    name = CharField(max_length=50, unique=True)  # User name, unique and max 50 characters
+    email = CharField(max_length=50)  # User email, max 50 characters
+    password = CharField(max_length=50)  # User password, max 50 characters
+    photoProfile = CharField(max_length=50)  # User profile picture path or URL
 
     class Meta:
-        database = database
-        table_name = "users"
-    # Specifies that this model uses the defined database connection and maps to the "users" table.
+        """Meta options for UserModel."""
+        database = database  # Use the connected database
+        table_name = "users"  # Table name in the database
 
 class CategoryIngredientsModel(Model):
-    idCategoryIngredients = AutoField(primary_key=True)
-    # Defines an auto-incrementing primary key for the `CategoryIngredientsModel`.
-
-    nameCategoryIngredients = CharField(max_length=50)
-    # Defines a character field for the category name of ingredients, limited to 50 characters.
+    """Model to represent ingredient categories."""
+    idCategoryIngredients = AutoField(primary_key=True)  # Auto-incrementing primary key
+    nameCategoryIngredients = CharField(max_length=50)  # Category name, max 50 characters
 
     class Meta:
-        database = database
-        table_name = "categoryIngredients"
-    # This model uses the defined database connection to the "categoryIngredients" table.
+        """Meta options for CategoryIngredientsModel."""
+        database = database  # Use the connected database
+        table_name = "categoryIngredients"  # Table name in the database
 
 class IngredientsModel(Model):
-    idIngredients = AutoField(primary_key=True)
-    # Defines an auto-incrementing primary key for the `IngredientsModel`.
-
-    nameIngredients = CharField(max_length=50)
-    # Defines a character field for the ingredient name, limited to 50 characters.
-
-    amount = CharField(max_length=50)
-    # Defines a character field for the amount of the ingredient, limited to 50 characters.
-
-    idCategoryIngredients = ForeignKeyField(CategoryIngredientsModel, backref='Ingredients')
-    # Foreign key field between ingredients and their category.
+    """Model to represent ingredients."""
+    idIngredients = AutoField(primary_key=True)  # Auto-incrementing primary key
+    nameIngredients = CharField(max_length=50)  # Ingredient name, max 50 characters
+    amount = CharField(max_length=50)  # Amount of ingredient, max 50 characters
+    idCategoryIngredients = ForeignKeyField(CategoryIngredientsModel, backref='Ingredients')  
+    # Foreign key to the ingredient category
 
     class Meta:
-        database = database
-        table_name = "ingredients"
-    # Specifies that this model uses the defined database connection to the "ingredients" table.
+        """Meta options for IngredientsModel."""
+        database = database  # Use the connected database
+        table_name = "ingredients"  # Table name in the database
 
 class RecipeModel(Model):
-    idRecipe = AutoField(primary_key=True)
-    # Defines an auto-incrementing primary key for the `RecipeModel`.
-
-    nameRecipe = CharField(max_length=50)
-    # Defines a character field for the recipe name, limited to 50 characters.
-
-    instructions = CharField(max_length=50)
-    # Defines a character field for the recipe instructions, limited to 50 characters.
-
-    timePreparation = CharField(max_length=50)
-    # Defines a character field for the preparation time, limited to 50 characters.
-
-    difficulty = CharField(max_length=50)
-    # Defines a character field for the recipe's difficulty level, limited to 50 characters.
-
-    category = CharField(max_length=50)
-    # Defines a character field for the category of the recipe, limited to 50 characters.
-
-    idIngredients = ForeignKeyField(IngredientsModel, backref='recipe')
-    # Foreign key field  between recipes and their ingredients.
-
-    nutrients = CharField(max_length=50)
-    # Defines a character field for the nutritional information, limited to 50 characters.
-
-    calories = IntegerField()
-    # Defines an integer field for the calorie count of the recipe.
+    """Model to represent recipes."""
+    idRecipe = AutoField(primary_key=True)  # Auto-incrementing primary key
+    nameRecipe = CharField(max_length=50)  # Recipe name, max 50 characters
+    instructions = CharField(max_length=50)  # Instructions for the recipe
+    timePreparation = CharField(max_length=50)  # Time needed to prepare the recipe
+    difficulty = CharField(max_length=50)  # Difficulty level of the recipe
+    category = CharField(max_length=50)  # Recipe category, max 50 characters
+    idIngredients = ForeignKeyField(IngredientsModel, backref='recipe')  
+    # Foreign key to ingredients used in the recipe
+    nutrients = CharField(max_length=50)  # Nutritional information
+    calories = IntegerField()  # Number of calories in the recipe
 
     class Meta:
-        database = database
-        table_name = "recipe"
-    # Specifies that this model uses the defined database connection and maps to the "recipe" table.
+        """Meta options for RecipeModel."""
+        database = database  # Use the connected database
+        table_name = "recipe"  # Table name in the database
 
 class SuggestionRecipeModel(Model):
-    idSuggestionRecipe = AutoField(primary_key=True)
-    # Defines an auto-incrementing primary key for the `SuggestionRecipeModel`.
-
-    idRecipe = ForeignKeyField(RecipeModel, backref='suggestionRecipe')
-    # Defines a foreign key field that links to the `RecipeModel` between suggestions and recipes.
-
-    idIngredients = ForeignKeyField(IngredientsModel, backref='suggestionRecipe')
-    # Foreign key field between suggestions and ingredients.
+    """Model to represent recipe suggestions."""
+    idSuggestionRecipe = AutoField(primary_key=True)  # Auto-incrementing primary key
+    idRecipe = ForeignKeyField(RecipeModel, backref='suggestionRecipe')  # Foreign key to recipe
+    idIngredients = ForeignKeyField(IngredientsModel, backref='suggestionRecipe')  
+    # Foreign key to ingredients for suggestions
 
     class Meta:
-        database = database
-        table_name = "suggestionRecipe"
-    # This model uses the defined database connection to the "suggestionRecipe" table.
+        """Meta options for SuggestionRecipeModel."""
+        database = database  # Use the connected database
+        table_name = "suggestionRecipe"  # Table name in the database
 
 class PantryModel(Model):
-    idPantry = AutoField(primary_key=True)
-    # Defines an auto-incrementing primary key for the `PantryModel`.
-
-    idIngredients = ForeignKeyField(IngredientsModel, backref='pantry')
-    # Foreign key field that between the pantry and ingredients.
+    """Model to represent the pantry."""
+    idPantry = AutoField(primary_key=True)  # Auto-incrementing primary key
+    idIngredients = ForeignKeyField(IngredientsModel, backref='pantry')  # Foreign key to ingredients in the pantry
 
     class Meta:
-        database = database
-        table_name = "pantry"
-    # Specifies that this model uses the defined database connection and maps to the "pantry" table.
+        """Meta options for PantryModel."""
+        database = database  # Use the connected database
+        table_name = "pantry"  # Table name in the database
 
 class CategoryRecipeModel(Model):
-    idCategoryRecipe = AutoField(primary_key=True)
-    # Defines an auto-incrementing primary key for the `CategoryRecipeModel`.
-
-    nameCategoryRecipe = CharField(max_length=50)
-    # Defines a character field for the recipe category name, limited to 50 characters.
+    """Model to represent recipe categories."""
+    idCategoryRecipe = AutoField(primary_key=True)  # Auto-incrementing primary key
+    nameCategoryRecipe = CharField(max_length=50)  # Recipe category name, max 50 characters
 
     class Meta:
-        database = database
-        table_name = "categoryRecipe"
-    # This model uses the defined database connection to the "categoryRecipe" table.
+        """Meta options for CategoryRecipeModel."""
+        database = database  # Use the connected database
+        table_name = "categoryRecipe"  # Table name in the database
 
 class NotificationModel(Model):
-    idNotification = AutoField(primary_key=True)
-    # Defines an auto-incrementing primary key for the `NotificationModel`.
-
-    notificationType = CharField(max_length=50)
-    # Defines a character field for the type of notification, limited to 50 characters.
-
-    message = CharField(max_length=50)
-    # Defines a character field for the notification message, limited to 50 characters.
-
-    shippingDate = CharField(max_length=50)
-    # Defines a character field for the date the notification is sent, limited to 50 characters.
+    """Model to represent notifications."""
+    idNotification = AutoField(primary_key=True)  # Auto-incrementing primary key
+    notificationType = CharField(max_length=50)  # Type of notification, max 50 characters
+    message = CharField(max_length=50)  # Notification message, max 50 characters
+    shippingDate = CharField(max_length=50)  # Date the notification was sent, max 50 characters
 
     class Meta:
-        database = database
-        table_name = "notification"
-    # This model uses the defined database connection and to the "notification" table.
+        """Meta options for NotificationModel."""
+        database = database  # Use the connected database
+        table_name = "notification"  # Table name in the database
 
 class MenuModel(Model):
-    idMenu = AutoField(primary_key=True)
-    # Defines an auto-incrementing primary key for the `MenuModel`.
-
-    day = CharField(max_length=50)
-    # Defines a character field for the day associated with the menu, limited to 50 characters.
-
-    starTime = CharField(max_length=50)  # Note: This should be corrected to 'startTime'
-    # Defines a character field for the start time of the menu, limited to 50 characters.
-
-    endTime = CharField(max_length=50)
-    # Defines a character field for the end time of the menu, limited to 50 characters.
-
-    category = CharField(max_length=50)
-    # Defines a character field for the category of the menu, limited to 50 characters.
-
-    idRecipe = ForeignKeyField(RecipeModel, backref='menu')
-    # Foreign key field between the menu and recipes.
+    """Model to represent menus."""
+    idMenu = AutoField(primary_key=True)  # Auto-incrementing primary key
+    day = CharField(max_length=50)  # Day associated with the menu
+    starTime = CharField(max_length=50)  # Start time for the menu (note: typo, should be startTime)
+    endTime = CharField(max_length=50)  # End time for the menu
+    category = CharField(max_length=50)  # Menu category
+    idRecipe = ForeignKeyField(RecipeModel, backref='menu')  # Foreign key to the recipe associated with the menu
 
     class Meta:
-        database = database
-        table_name = "menu"
-    # Specifies that this model uses the defined database connection and maps to the "menu" table.
+        """Meta options for MenuModel."""
+        database = database  # Use the connected database
+        table_name = "menu"  # Table name in the database
 
 class BuyListModel(Model):
-    idBuys = AutoField(primary_key=True)
-    # Defines an auto-incrementing primary key for the `BuyListModel`.
-
-    category = CharField(max_length=50)
-    # Defines a character field for the category of items in the buy list, limited to 50 characters.
-
-    purchaseDate = CharField(max_length=50)
-    # Defines a character field for the purchase date, limited to 50 characters.
-
-    idIngredients = ForeignKeyField(IngredientsModel, backref='buysList')
-    # Foreign key field between the buy list and ingredients.
+    """Model to represent shopping lists."""
+    idBuys = AutoField(primary_key=True)  # Auto-incrementing primary key
+    category = CharField(max_length=50)  # Category of items in the shopping list
+    purchaseDate = CharField(max_length=50)  # Date of purchase
+    idIngredients = ForeignKeyField(IngredientsModel, backref='buysList')  
+    # Foreign key to ingredients in the shopping list
 
     class Meta:
-        database = database
-        table_name = "buysList"
-    # Specifies that this model uses the defined database connection and maps to
+        """Meta options for BuyListModel."""
+        database = database  # Use the connected database
+        table_name = "buysList"  # Table name in the database
