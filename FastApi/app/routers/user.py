@@ -20,7 +20,7 @@ Dependencies:
     - Body: FastAPI dependency for parsing request bodies.
 """
 from config.database import UserModel
-from models.User import User
+from models.user import User
 
 from fastapi import APIRouter, Body
 
